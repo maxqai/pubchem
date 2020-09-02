@@ -4,6 +4,10 @@ import gzip
 
 
 def load_data(input_file):
+    """Main function to load data from individual xml files"""
+
+    ## keep track of tags, whereby these change to true the next item in the appropriate element
+    ## will be the relevant value 
 
     PC_count = False
     inchi = False
@@ -21,12 +25,15 @@ def load_data(input_file):
     monoisotopic_weight = False
     complexity = False
 
+    ## use gzip to read the .gz file
     unzipped_file = gzip.open(input_file, 'rb')
 
+    ## use ET.iterparse to loop through the xml line by line
     for event, elem in ET.iterparse(unzipped_file, events=("start","end")):
         prefix, has_namespace, postfix = elem.tag.partition('}')
         if has_namespace:
             elem.tag = postfix  # strip all namespaces
+        ## all of the compound properties will be inside this element
         if((elem.tag == "PC-CompoundType_id_cid") & (event == 'start')):     
             current_compound = {}
             compound_data = {}
@@ -36,9 +43,11 @@ def load_data(input_file):
             compound_data["smiles"] = {}
         elif((elem.tag == "PC-Compound") & (event == 'end')):
             current_compound["pubchem"] = compound_data
-            # print(current_compound)
+            ## rarely, some will be missing a cid. make sure this isn't the case
             if(current_compound["_id"]):
+                ## yield the compound
                 yield(current_compound)
+            ## clear element from memory
             elem.clear()
         elif((elem.tag == "PC-Compound_charge") & (event == 'start')):
             if(elem.text):
