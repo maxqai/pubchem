@@ -18,137 +18,182 @@ import biothings.hub.dataload.storage as storage
 
 class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
 
-    name = "pubchem"
-    storage_class = storage.IgnoreDuplicatedStorage
-    __metadata__ = {"src_meta" : {
-        "url": "https://pubchem.ncbi.nlm.nih.gov/",
-        "license_url" : "https://www.ncbi.nlm.nih.gov/home/about/policies/",
-        "license_url_short" : "http://bit.ly/2AqoLOc",
-        "license": "public domain"
-        }
-    }
+     name = "UniChem_BioThings_SDK"
 
-    COMPOUND_PATTERN = "Compound*.xml.gz"
+    __metadata__ = {"src_meta": {
+                        "url": 'https://www.ebi.ac.uk/unichem',
+                        "license_url": ("https://s100.copyright.com/AppDispatchServlet?title=UniChem"
+                            "%3A%20a%20unified%20chemical%20structure%20cross-referencing"
+                            "%20and%20identifier%20tracking%20system&author=Jon%20Chambers"
+                            "%20et%20al&contentID=10.1186%2F1758-2946-5-3&publication=1758"
+                            "-2946&publicationDate=2013-01-14&publisherName=SpringerNature"
+                            "&orderBeanReset=true&oa=CC%20BY"),
+                        "license_url_short": "https://bit.ly/2CCluAB",
+                        "license": "CC BY-SA 4.0"
+                        }
+                    }
 
-    def jobs(self):
-        # this will generate arguments for self.load.data() method, allowing parallelization
-        xmlgz_files = glob.glob(os.path.join(self.data_folder,self.__class__.COMPOUND_PATTERN))
-        return [(f,) for f in xmlgz_files]
+    idconverter = None
+    storage_class = biothings.hub.dataload.storage.BasicStorage
 
-    def load_data(self,input_file):
-        self.logger.info("Load data from file '%s'" % input_file)
-        return parser_func(input_file)
-
-    def post_update_data(self, *args, **kwargs):
-        # hashed because inchi is too long (and we'll do == ops to hashed are enough)
-        for idxname in ["pubchem.inchi","pubchem.cid"]:
-            self.logger.info("Indexing '%s'" % idxname)
-            self.collection.create_index([(idxname,pymongo.HASHED)],background=True)
+    def load_data(self, data_folder):
+        self.logger.info("Load data from directory: '%s'" % data_folder)
+        return parser_func(data_folder)
 
     @classmethod
     def get_mapping(klass):
-        mapping = {
-                "pubchem" : {
-                    "properties" : {
-                        "inchi_key" : {
-                            "normalizer": "keyword_lowercase_normalizer",
-                            "type": "keyword",
-                            },
-                        "undefined_atom_stereocenter_count" : {
-                            "type":"integer"
-                            },
-                        "formal_charge" : {
-                            "type":"integer"
-                            },
-                        "isotope_atom_count" : {
-                            "type":"integer"
-                            },
-                        "defined_atom_stereocenter_count" : {
-                            "type":"integer"
-                            },
-                        "molecular_weight" : {
-                            "type":"float"
-                            },
-                        "monoisotopic_weight" : {
-                            "type":"float"
-                            },
-                        "tautomers_count" : {
-                            "type":"integer"
-                            },
-                        "rotatable_bond_count" : {
-                            "type":"integer"
-                            },
-                        "exact_mass" : {
-                            "type":"float"
-                            },
-                        "chiral_bond_count" : {
-                            "type":"integer"
-                            },
-                        "smiles" : {
-                            "properties" : {
-                                "isomeric" : {
-                                    "normalizer": "keyword_lowercase_normalizer",
-                                    "type": "keyword",
-                                    },
-                                "canonical" : {
-                                    "normalizer": "keyword_lowercase_normalizer",
-                                    "type": "keyword",
-                                    }
-                                }
-                            },
-                        "hydrogen_bond_acceptor_count" : {
-                            "type":"integer"
-                            },
-                        "hydrogen_bond_donor_count" : {
-                                "type":"integer"
-                                },
-                        "inchi" : {
-                                "normalizer": "keyword_lowercase_normalizer",
-                                "type": "keyword",
-                                },
-                        "undefined_bond_stereocenter_count" : {
-                                "type":"integer"
-                                },
-                        "defined_bond_stereocenter_count" : {
-                                "type":"integer"
-                                },
-                        "xlogp" : {
-                                "type":"float"
-                                },
-                        "chiral_atom_count" : {
-                                "type":"integer"
-                                },
-                        "cid" : {
-                                "normalizer": "keyword_lowercase_normalizer",
-                                "type": "keyword",
-                                'copy_to': ['all'],
-                                },
-                        "topological_polar_surface_area" : {
-                                "type":"float"
-                                },
-                        "iupac" : {
-                                "properties" : {
-                                    "traditional" : {
-                                        "type":"text"
-                                        }
-                                    }
-                                },
-                        "complexity" : {
-                                "type":"float"
-                                },
-                        "heavy_atom_count" : {
-                                "type":"integer"
-                                },
-                        "molecular_formula" : {
-                                "normalizer": "keyword_lowercase_normalizer",
-                                "type": "keyword",
-                                },
-                        "covalently-bonded_unit_count" : {
-                                "type":"integer"
-                                }
-                        }
+        return         {
+            'unichem': {
+                'properties': {
+                    'actor': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'atlas': {
+                        'type': 'text'
+                    },
+                    'bindingdb': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'brenda': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'carotenoiddb': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'chebi': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'chembl': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'chemicalbook': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'clinicaltrials': {
+                        'type': 'text'
+                    },
+                    'comptox': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'dailymed': {
+                        'type': 'text'
+                    },
+                    'drugbank': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'drugcentral': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'emolecules': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'fdasrs': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'gtopdb': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'hmdb': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'ibm': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'kegg_ligand': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'lincs': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'lipidmaps': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'mcule': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'metabolights': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'molport': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'nih_ncc': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'nikkaji': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'nmrshiftdb2': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'pdb': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'pharmgkb': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'pubchem': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'pubchem_dotf': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'pubchem_tpharma': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'recon': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'rhea': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'selleck': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'surechembl': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'swisslipids': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    },
+                    'zinc': {
+                        'normalizer': 'keyword_lowercase_normalizer',
+                        'type': 'keyword'
+                    }
                 }
             }
-
-        return mapping
-
+        }
