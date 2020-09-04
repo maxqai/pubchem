@@ -2,8 +2,6 @@ import os
 import glob
 import zipfile
 import pymongo
-
-
 # when code is exported, import becomes relative
 try:
     from pubchem.parser import load_annotations as parser_func
@@ -39,12 +37,6 @@ class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
     def load_data(self,input_file):
         self.logger.info("Load data from file '%s'" % input_file)
         return parser_func(input_file)
-
-    def post_update_data(self, *args, **kwargs):
-        # hashed because inchi is too long (and we'll do == ops to hashed are enough)
-        for idxname in ["pubchem.inchi","pubchem.cid"]:
-            self.logger.info("Indexing '%s'" % idxname)
-            self.collection.create_index([(idxname,pymongo.HASHED)],background=True)
 
     @classmethod
     def get_mapping(klass):
