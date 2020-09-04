@@ -1,14 +1,14 @@
-# import os
-# import os.path
-# import sys
-# import time
-# import ftplib
+import os
+import os.path
+import sys
+import time
+import ftplib
 
-# import biothings, config
-# biothings.config_for_app(config)
+import biothings, config
+biothings.config_for_app(config)
 
-# from config import DATA_ARCHIVE_ROOT
-# from biothings.hub.dataload.dumper import FTPDumper, DumperException
+from config import DATA_ARCHIVE_ROOT
+from biothings.hub.dataload.dumper import FTPDumper, DumperException
 
 
 class PubChemDumper(FTPDumper):
@@ -18,8 +18,7 @@ class PubChemDumper(FTPDumper):
     FTP_HOST = 'ftp.ncbi.nlm.nih.gov'
     CWD_DIR = '/pubchem/Compound/CURRENT-Full/XML'
     ARCHIVE = False
-    #SCHEDULE = "0 12 * * *"
-    #MAX_PARALLEL_DUMP = 5
+    MAX_PARALLEL_DUMP = 5
 
     VERSION_DIR = '/pubchem/Compound/Monthly'
 

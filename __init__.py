@@ -1,2 +1,2 @@
 from .dump import PubChemDumper
-from .upload import PubChemUploader
+from .upload import PubChemUploaderasdf

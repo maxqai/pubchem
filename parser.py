@@ -1,6 +1,6 @@
-# import os
-# import xml.etree.ElementTree as ET
-# import gzip
+import os
+import xml.etree.ElementTree as ET
+import gzip
 
 
 def load_data(input_file):
