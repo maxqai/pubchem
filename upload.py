@@ -48,7 +48,7 @@ class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
 
     @classmethod
     def get_mapping(klass):
-        mapping = {
+        return {
                 "pubchem" : {
                     "properties" : {
                         "inchi_key" : {
@@ -150,6 +150,4 @@ class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
                         }
                 }
             }
-
-        return mapping
 
