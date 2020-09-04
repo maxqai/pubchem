@@ -12,7 +12,7 @@ from biothings.hub.dataload.dumper import FTPDumper, DumperException
 
 class PubChemUploader(FTPDumper):
 
-    SRC_NAME = "UniChem_BioThings_SDK"
+    SRC_NAME = "pubchem"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)  
     FTP_HOST = 'ftp.ebi.ac.uk'
     CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
