@@ -1,6 +1,5 @@
 import os
 import glob
-import zipfile
 import pymongo
 # when code is exported, import becomes relative
 try:
