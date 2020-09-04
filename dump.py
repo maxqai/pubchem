@@ -1,8 +1,7 @@
 import os
-import os.path
 import sys
 import time
-import ftplib
+# import ftplib
 
 import biothings, config
 biothings.config_for_app(config)
@@ -51,8 +50,8 @@ class PubChemDumper(FTPDumper):
                     local = os.path.join(self.new_data_folder,remote)
                     if not os.path.exists(local) or self.remote_is_better(remote,local):
                         self.to_dump.append({"remote": remote,"local":local})
-                except ftplib.error_temp as e:
-                    self.logger.debug("Recycling FTP client because: '%s'" % e)
-                    self.release_client()
-                    self.prepare_client()
+                # except ftplib.error_temp as e:
+                #     self.logger.debug("Recycling FTP client because: '%s'" % e)
+                #     self.release_client()
+                #     self.prepare_client()
 
