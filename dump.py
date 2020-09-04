@@ -17,7 +17,7 @@ class PubChemDumper(FTPDumper):
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
     FTP_HOST = 'ftp.ncbi.nlm.nih.gov'
     CWD_DIR = '/pubchem/Compound/CURRENT-Full/XML'
-    ARCHIVE = False
+    # ARCHIVE = False
     #SCHEDULE = "0 12 * * *"
     MAX_PARALLEL_DUMP = 5
 
