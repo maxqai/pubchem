@@ -16,20 +16,17 @@ from hub.dataload.uploader import BaseDrugUploader
 from biothings.hub.dataload.uploader import ParallelizedSourceUploader
 import biothings.hub.dataload.storage as storage
 
+class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
 
-SRC_META = {
+    name = "pubchem"
+    storage_class = storage.IgnoreDuplicatedStorage
+    __metadata__ = {"src_meta" : {
         "url": "https://pubchem.ncbi.nlm.nih.gov/",
         "license_url" : "https://www.ncbi.nlm.nih.gov/home/about/policies/",
         "license_url_short" : "http://bit.ly/2AqoLOc",
         "license": "public domain"
         }
-
-
-class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
-
-    name = "pubchem"
-    storage_class = storage.IgnoreDuplicatedStorage
-    __metadata__ = {"src_meta" : SRC_META}
+    }
 
     COMPOUND_PATTERN = "Compound*.xml.gz"
 
