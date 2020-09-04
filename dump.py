@@ -1,14 +1,14 @@
-import os
-import os.path
-import sys
-import time
-import ftplib
+# import os
+# import os.path
+# import sys
+# import time
+# import ftplib
 
-import biothings, config
-biothings.config_for_app(config)
+# import biothings, config
+# biothings.config_for_app(config)
 
-from config import DATA_ARCHIVE_ROOT
-from biothings.hub.dataload.dumper import FTPDumper, DumperException
+# from config import DATA_ARCHIVE_ROOT
+# from biothings.hub.dataload.dumper import FTPDumper, DumperException
 
 
 class PubChemDumper(FTPDumper):

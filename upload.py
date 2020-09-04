@@ -1,27 +1,27 @@
-import os
-import glob
-import zipfile
-import pymongo
+# import os
+# import glob
+# import zipfile
+# import pymongo
 
 
-# when code is exported, import becomes relative
-try:
-    from pubchem.parser import load_data as parser_func
-except ImportError:
-    from .parser import load_data as parser_func
+# # when code is exported, import becomes relative
+# try:
+#     from pubchem.parser import load_data as parser_func
+# except ImportError:
+#     from .parser import load_data as parser_func
 
 
-# from parser import load_data
-from hub.dataload.uploader import BaseDrugUploader
-from biothings.hub.dataload.uploader import ParallelizedSourceUploader
-import biothings.hub.dataload.storage as storage
+# # from parser import load_data
+# from hub.dataload.uploader import BaseDrugUploader
+# from biothings.hub.dataload.uploader import ParallelizedSourceUploader
+# import biothings.hub.dataload.storage as storage
 
 class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
 
     name = "pubchem"
     storage_class = storage.IgnoreDuplicatedStorage
-    
-    __metadata__ = {"src_meta" : {
+
+    __metadata__ = { "src_meta" : {
         "url": "https://pubchem.ncbi.nlm.nih.gov/",
         "license_url" : "https://www.ncbi.nlm.nih.gov/home/about/policies/",
         "license_url_short" : "http://bit.ly/2AqoLOc",
