@@ -6,9 +6,9 @@ import pymongo
 
 # when code is exported, import becomes relative
 try:
-    from pubchem.parser import load_data as parser_func
+    from pubchem.parser import load_annotations as parser_func
 except ImportError:
-    from .parser import load_data as parser_func
+    from .parser import load_annotations as parser_func
 
 
 # from parser import load_data

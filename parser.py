@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import gzip
 
 
-def load_data(input_file):
+def load_annotations(input_file):
     """Main function to load data from individual xml files"""
 
     ## keep track of tags, whereby these change to true the next item in the appropriate element
