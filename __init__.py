@@ -1,2 +1,2 @@
-from .pubchem_dump import PubChemDumper
-from .pubchem_upload import PubChemUploader
+from .dump import PubChemDumper
+from .upload import PubChemUploader

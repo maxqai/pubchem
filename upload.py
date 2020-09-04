@@ -3,7 +3,7 @@ import glob
 import zipfile
 import pymongo
 
-from .pubchem_parser import load_data
+from parser import load_data
 from hub.dataload.uploader import BaseDrugUploader
 from biothings.hub.dataload.uploader import ParallelizedSourceUploader
 import biothings.hub.dataload.storage as storage
