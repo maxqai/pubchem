@@ -3,7 +3,15 @@ import glob
 import zipfile
 import pymongo
 
-from parser import load_data
+
+# when code is exported, import becomes relative
+try:
+    from pubchem.parser import load_data as parser_func
+except ImportError:
+    from .parser import load_data as parser_func
+
+
+# from parser import load_data
 from hub.dataload.uploader import BaseDrugUploader
 from biothings.hub.dataload.uploader import ParallelizedSourceUploader
 import biothings.hub.dataload.storage as storage
@@ -32,7 +40,7 @@ class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
 
     def load_data(self,input_file):
         self.logger.info("Load data from file '%s'" % input_file)
-        return load_data(input_file)
+        return parser_func(input_file)
 
     def post_update_data(self, *args, **kwargs):
         # hashed because inchi is too long (and we'll do == ops to hashed are enough)
