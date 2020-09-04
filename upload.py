@@ -1,7 +1,7 @@
-import os
-import glob
-import zipfile
-import pymongo
+# import os
+# import glob
+# import zipfile
+# import pymongo
 
 
 # when code is exported, import becomes relative
@@ -11,10 +11,10 @@ except ImportError:
     from .parser import load_data as parser_func
 
 
-# from parser import load_data
-from hub.dataload.uploader import BaseDrugUploader
-from biothings.hub.dataload.uploader import ParallelizedSourceUploader
-import biothings.hub.dataload.storage as storage
+# # from parser import load_data
+# from hub.dataload.uploader import BaseDrugUploader
+# from biothings.hub.dataload.uploader import ParallelizedSourceUploader
+# import biothings.hub.dataload.storage as storage
 
 class PubChemUploader(BaseDrugUploader,ParallelizedSourceUploader):
 
