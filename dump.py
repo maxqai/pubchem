@@ -41,6 +41,7 @@ class PubChemDumper(FTPDumper):
             return False
 
     def create_todump_list(self, force=False):
+        self.logger.info("HELLO")
         self.get_release()
         if force or self.new_release_available():
             # get list of files to download
