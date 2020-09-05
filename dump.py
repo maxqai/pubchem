@@ -17,7 +17,7 @@ class PubChemDumper(FTPDumper):
     CWD_DIR = '/pubchem/Compound/CURRENT-Full/XML'
     ARCHIVE = False
     SCHEDULE = "0 12 * * *"
-    MAX_PARALLEL_DUMP = 5
+    # MAX_PARALLEL_DUMP = 5
 
     VERSION_DIR = '/pubchem/Compound/Monthly'
 
@@ -48,10 +48,10 @@ class PubChemDumper(FTPDumper):
             for remote in remote_files:
                 try:
                     local = os.path.join(self.new_data_folder,remote)
-                    if not os.path.exists(local):
+                    if not os.path.exists(local) or self.remote_is_better(remote,local):
                         self.to_dump.append({"remote": remote,"local":local})
                 except ftplib.error_temp as e:
                     self.logger.debug("Recycling FTP client because: '%s'" % e)
-                    # self.release_client()
-                    # self.prepare_client()
+                    self.release_client()
+                    self.prepare_client()
 
