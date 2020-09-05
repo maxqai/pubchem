@@ -48,7 +48,7 @@ class PubChemDumper(FTPDumper):
             for remote in remote_files:
                 try:
                     local = os.path.join(self.new_data_folder,remote)
-                    if not os.path.exists(local) or self.remote_is_better(remote,local):
+                    if not os.path.exists(local):
                         self.to_dump.append({"remote": remote,"local":local})
                 except ftplib.error_temp as e:
                     self.logger.debug("Recycling FTP client because: '%s'" % e)
