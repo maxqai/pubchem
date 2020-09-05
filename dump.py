@@ -52,6 +52,6 @@ class PubChemDumper(FTPDumper):
                         self.to_dump.append({"remote": remote,"local":local})
                 except ftplib.error_temp as e:
                     self.logger.debug("Recycling FTP client because: '%s'" % e)
-                    self.release_client()
-                    self.prepare_client()
+                    # self.release_client()
+                    # self.prepare_client()
 
